@@ -1,25 +1,18 @@
 "use client";
 
 import * as React from "react";
-import * as ToggleGroupPrimitive from "@radix-ui/react-toggle-group@1.1.2";
-//import { type VariantProps } from "class-variance-authority@0.7.1";
+import * as ToggleGroupPrimitive from "@radix-ui/react-toggle-group";
 
 import { cn } from "./utils";
 import { toggleVariants } from "./toggle";
 
-const ToggleGroupContext = React.createContext<
-  VariantProps<typeof toggleVariants>
->({
-  size: "default", variant,
+// context: { variant, size }
+const ToggleGroupContext = React.createContext({
+  variant: "default",
+  size: "default",
 });
 
-function ToggleGroup({
-  className,
-  variant,
-  size,
-  children,
-  ...props
-}) {
+function ToggleGroup({ className, variant = "default", size = "default", children, ...props }) {
   return (
     <ToggleGroupPrimitive.Root
       data-slot="toggle-group"
@@ -27,7 +20,7 @@ function ToggleGroup({
       data-size={size}
       className={cn(
         "group/toggle-group flex w-fit items-center rounded-md data-[variant=outline]:shadow-xs",
-        className,
+        className
       )}
       {...props}
     >
@@ -47,17 +40,18 @@ function ToggleGroupItem({
 }) {
   const context = React.useContext(ToggleGroupContext);
 
+  const finalVariant = variant || context.variant || "default";
+  const finalSize = size || context.size || "default";
+
   return (
     <ToggleGroupPrimitive.Item
       data-slot="toggle-group-item"
-      data-variant={context.variant || variant}
-      data-size={context.size || size}
+      data-variant={finalVariant}
+      data-size={finalSize}
       className={cn(
-        toggleVariants({
-          variant: context.variant || variant, size,
-        }),
+        toggleVariants({ variant: finalVariant, size: finalSize }),
         "min-w-0 flex-1 shrink-0 rounded-none shadow-none first:rounded-l-md last:rounded-r-md focus:z-10 focus-visible:z-10 data-[variant=outline]:border-l-0 data-[variant=outline]:first:border-l",
-        className,
+        className
       )}
       {...props}
     >

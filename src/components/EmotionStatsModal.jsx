@@ -4,32 +4,33 @@ import { Card } from "./ui/card";
 import { X, Clock } from "lucide-react";
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend } from "recharts";
 
-//interface EmotionStatsModalProps {
-//  open: boolean;
-//  onClose: () => void;
-//  date: number;
-//}
-
+// 감정 기록 (Mock Data)
 const emotionRecords = [
-  { time: "09:30", emotion, reason, color,
-  { time: "14:20", emotion, reason, color,
-  { time: "18:45", emotion, reason, color,
-  { time: "21:00", emotion, reason, color,
+  { time: "09:30", emotion: "행복", reason: "좋은 소식을 들었어요", color: "#FFE082" },
+  { time: "14:20", emotion: "평온", reason: "조용히 책을 읽었어요", color: "#C4E5D4" },
+  { time: "18:45", emotion: "불안", reason: "중요한 약속이 있었어요", color: "#D4C4E5" },
+  { time: "21:00", emotion: "설렘", reason: "친구와 즐거운 대화", color: "#FFE0A3" },
 ];
 
+// 차트용 데이터 (Mock Data)
 const chartData = [
-  { name: "행복", value, color,
-  { name: "평온", value, color,
+  { name: "행복", value: 35, color: "#FFE082" },
+  { name: "평온", value: 40, color: "#C4E5D4" },
+  { name: "불안", value: 15, color: "#D4C4E5" },
+  { name: "설렘", value: 10, color: "#FFE0A3" },
 ];
 
 export function EmotionStatsModal({ open, onClose, date }) {
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent 
+      <DialogContent
         className="max-w-[350px] p-0 bg-transparent border-none shadow-none max-h-[90vh] overflow-y-auto"
       >
         <DialogTitle className="sr-only">감정 통계</DialogTitle>
-        <DialogDescription className="sr-only">선택한 날짜의 감정 통계를 확인하세요</DialogDescription>
+        <DialogDescription className="sr-only">
+          선택한 날짜의 감정 통계입니다
+        </DialogDescription>
+
         <div className="bg-card rounded-2xl shadow-soft-lg border overflow-hidden">
           {/* Header */}
           <div className="bg-primary/10 p-6 border-b relative">
@@ -41,7 +42,7 @@ export function EmotionStatsModal({ open, onClose, date }) {
             >
               <X className="w-5 h-5" strokeWidth={2} />
             </Button>
-            
+
             <h3 className="text-primary">11월 {date}일</h3>
             <p className="text-sm text-muted-foreground mt-0.5">감정 통계</p>
           </div>
@@ -53,22 +54,29 @@ export function EmotionStatsModal({ open, onClose, date }) {
               <h4 className="mb-3 font-medium">오늘의 감정 기록</h4>
               <div className="space-y-2.5">
                 {emotionRecords.map((record, index) => (
-                  <Card 
+                  <Card
                     key={index}
                     className="p-4 rounded-xl border shadow-soft"
-                    style={{ 
-                      borderColor: `${record.color}80`, backgroundColor="flex items-center gap-3">
+                    style={{
+                      borderColor: `${record.color}80`,
+                      backgroundColor: `${record.color}20`,
+                    }}
+                  >
+                    <div className="flex items-center gap-3">
                       <div className="flex items-center gap-1.5 text-sm text-muted-foreground flex-shrink-0">
                         <Clock className="w-4 h-4" strokeWidth={2} />
                         <span>{record.time}</span>
                       </div>
+
                       <div className="flex-1">
                         <div className="flex items-center gap-2 mb-0.5">
-                          <div 
+                          <div
                             className="w-3 h-3 rounded-full"
                             style={{ backgroundColor: record.color }}
                           ></div>
-                          <span className="text-sm font-medium text-foreground">{record.emotion}</span>
+                          <span className="text-sm font-medium text-foreground">
+                            {record.emotion}
+                          </span>
                         </div>
                         <p className="text-xs text-muted-foreground">{record.reason}</p>
                       </div>
@@ -93,11 +101,11 @@ export function EmotionStatsModal({ open, onClose, date }) {
                     dataKey="value"
                   >
                     {chartData.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={entry.color} />
+                      <Cell key={index} fill={entry.color} />
                     ))}
                   </Pie>
-                  <Legend 
-                    verticalAlign="bottom" 
+                  <Legend
+                    verticalAlign="bottom"
                     height={36}
                     formatter={(value) => <span className="text-sm">{value}</span>}
                   />
@@ -108,7 +116,7 @@ export function EmotionStatsModal({ open, onClose, date }) {
 
           {/* Close Button */}
           <div className="px-6 pb-6">
-            <Button 
+            <Button
               onClick={onClose}
               className="w-full h-12 rounded-xl bg-primary hover:bg-primary/90 shadow-soft"
             >

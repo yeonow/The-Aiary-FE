@@ -1,7 +1,6 @@
 import * as React from "react";
-import { Slot } from "@radix-ui/react-slot@1.1.2";
-import {cva} from "class-variance-authority@0.7.1";
-
+import { Slot } from "@radix-ui/react-slot";
+import { cva } from "class-variance-authority";
 import { cn } from "./utils";
 
 const badgeVariants = cva(
@@ -10,19 +9,22 @@ const badgeVariants = cva(
     variants: {
       variant: {
         default:
-          "border-transparent bg-primary text-primary-foreground [a&]:hover:bg-primary/90", secondary, destructive, outline,
+          "border-transparent bg-primary text-primary-foreground [a&]:hover:bg-primary/90",
+        secondary:
+          "border-transparent bg-secondary text-secondary-foreground [a&]:hover:bg-secondary/80",
+        destructive:
+          "border-transparent bg-destructive text-destructive-foreground [a&]:hover:bg-destructive/90",
+        outline:
+          "text-foreground border-border [a&]:hover:bg-accent",
       },
-    }, defaultVariants,
     },
-  },
+    defaultVariants: {
+      variant: "default",
+    },
+  }
 );
 
-function Badge({
-  className,
-  variant,
-  asChild = false,
-  ...props
-}) {
+function Badge({ className, variant, asChild = false, ...props }) {
   const Comp = asChild ? Slot : "span";
 
   return (

@@ -1,73 +1,63 @@
 "use client";
 
 import * as React from "react";
-import * as LabelPrimitive from "@radix-ui/react-label@2.1.2";
-import { Slot } from "@radix-ui/react-slot@1.1.2";
+import { Slot } from "@radix-ui/react-slot";
 import {
   Controller,
   FormProvider,
   useFormContext,
   useFormState,
-//  type ControllerProps,
-//  type FieldPath,
-//  type FieldValues,
-} from "react-hook-form@7.55.0";
+} from "react-hook-form";
 
 import { cn } from "./utils";
 import { Label } from "./label";
 
-const Form = FormProvider;
+// ---- Contexts ---- //
 
-//type FormFieldContextValue<
-  TFieldValues extends FieldValues = FieldValues,
-  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
-> = {
-  name: TName;
-};
+const FormFieldContext = React.createContext(null);
+const FormItemContext = React.createContext(null);
 
-const FormFieldContext = React.createContext(
-  {},
-);
+// ---- Helpers ---- //
 
-const FormField = <
-  TFieldValues extends FieldValues = FieldValues,
-  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
->({
-  ...props
-}) => {
-  return (
-    <FormFieldContext.Provider value={{ name: props.name }}>
-      <Controller {...props} />
-    </FormFieldContext.Provider>
-  );
-};
-
-const useFormField = () => {
+function useFormField() {
   const fieldContext = React.useContext(FormFieldContext);
   const itemContext = React.useContext(FormItemContext);
+
   const { getFieldState } = useFormContext();
-  const formState = useFormState({ name: fieldContext.name });
-  const fieldState = getFieldState(fieldContext.name, formState);
+  const formState = useFormState({ name: fieldContext?.name });
 
   if (!fieldContext) {
     throw new Error("useFormField should be used within <FormField>");
   }
 
-  const { id } = itemContext;
+  const fieldState = getFieldState(fieldContext.name, formState);
+  const { id } = itemContext ?? {};
+
+  const formItemId = id;
+  const formDescriptionId = id ? `${id}-description` : undefined;
+  const formMessageId = id ? `${id}-message` : undefined;
 
   return {
-    id, name, formItemId, formDescriptionId, formMessageId,
+    id,
+    name: fieldContext.name,
+    formItemId,
+    formDescriptionId,
+    formMessageId,
     ...fieldState,
   };
-};
+}
 
-//type FormItemContextValue = {
-//  id: string;
-//};
+// ---- Components ---- //
 
-const FormItemContext = React.createContext(
-  {},
-);
+const Form = FormProvider;
+
+function FormField({ name, ...props }) {
+  return (
+    <FormFieldContext.Provider value={{ name }}>
+      <Controller name={name} {...props} />
+    </FormFieldContext.Provider>
+  );
+}
 
 function FormItem({ className, ...props }) {
   const id = React.useId();
@@ -83,10 +73,7 @@ function FormItem({ className, ...props }) {
   );
 }
 
-function FormLabel({
-  className,
-  ...props
-}) {
+function FormLabel({ className, ...props }) {
   const { error, formItemId } = useFormField();
 
   return (
@@ -100,7 +87,7 @@ function FormLabel({
   );
 }
 
-function FormControl({ ...props }) {
+function FormControl(props) {
   const { error, formItemId, formDescriptionId, formMessageId } =
     useFormField();
 
@@ -109,9 +96,9 @@ function FormControl({ ...props }) {
       data-slot="form-control"
       id={formItemId}
       aria-describedby={
-        !error
-          ? `${formDescriptionId}`
-          : `${formDescriptionId} ${formMessageId}`
+        error
+          ? `${formDescriptionId} ${formMessageId}`
+          : `${formDescriptionId}`
       }
       aria-invalid={!!error}
       {...props}
@@ -132,13 +119,11 @@ function FormDescription({ className, ...props }) {
   );
 }
 
-function FormMessage({ className, ...props }) {
+function FormMessage({ className, children, ...props }) {
   const { error, formMessageId } = useFormField();
-  const body = error ? String(error?.message ?? "") : props.children;
+  const body = error ? String(error?.message ?? "") : children;
 
-  if (!body) {
-    return null;
-  }
+  if (!body) return null;
 
   return (
     <p
@@ -151,6 +136,8 @@ function FormMessage({ className, ...props }) {
     </p>
   );
 }
+
+// ---- Exports ---- //
 
 export {
   useFormField,

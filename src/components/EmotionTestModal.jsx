@@ -4,23 +4,23 @@ import { Button } from "./ui/button";
 import { Progress } from "./ui/progress";
 import { X, Sparkles } from "lucide-react";
 
-//interface EmotionTestModalProps {
-//  open: boolean;
-//  onClose: () => void;
-//}
-
+// 질문 데이터
 const questions = [
   {
-    question: "오늘 하루 기분은 어떠셨나요?", options, "괜찮았어요", "그저 그랬어요", "별로였어요"]
+    question: "오늘 하루 기분은 어떠셨나요?",
+    options: ["좋았어요", "괜찮았어요", "그저 그랬어요", "별로였어요"]
   },
   {
-    question: "최근 일주일간 가장 많이 느낀 감정은?", options, "평온", "불안", "피곤함"]
+    question: "최근 일주일간 가장 많이 느낀 감정은?",
+    options: ["평온", "불안", "피곤함", "기쁨"]
   },
   {
-    question: "스트레스를 받을 때 어떻게 해소하시나요?", options, "혼자 시간 보내기", "운동하기", "음악 듣기"]
+    question: "스트레스를 받을 때 어떻게 해소하시나요?",
+    options: ["혼자 시간 보내기", "운동하기", "음악 듣기", "수다 떨기"]
   },
   {
-    question: "요즘 가장 신경 쓰이는 것은?", options, "인간관계", "건강", "미래에 대한 걱정"]
+    question: "요즘 가장 신경 쓰이는 것은?",
+    options: ["인간관계", "건강", "미래에 대한 걱정", "학업/일"]
   }
 ];
 
@@ -30,8 +30,9 @@ export function EmotionTestModal({ open, onClose }) {
 
   const progress = ((currentStep + 1) / questions.length) * 100;
 
-  const handleAnswer = ( optionIndex) => {
-    const newAnswers = [...answers, optionIndex];
+  const handleAnswer = (optionIndex) => {
+    const newAnswers = [...answers];
+    newAnswers[currentStep] = optionIndex;
     setAnswers(newAnswers);
 
     if (currentStep < questions.length - 1) {
@@ -39,7 +40,7 @@ export function EmotionTestModal({ open, onClose }) {
         setCurrentStep(currentStep + 1);
       }, 300);
     } else {
-      // Test completed
+      // 마지막 질문 이후 닫기
       setTimeout(() => {
         handleClose();
       }, 500);
@@ -58,7 +59,10 @@ export function EmotionTestModal({ open, onClose }) {
     <Dialog open={open} onOpenChange={handleClose}>
       <DialogContent className="max-w-[350px] p-0 bg-transparent border-none shadow-none">
         <DialogTitle className="sr-only">감정 테스트</DialogTitle>
-        <DialogDescription className="sr-only">간단한 질문에 답변하여 감정 상태를 파악해보세요</DialogDescription>
+        <DialogDescription className="sr-only">
+          간단한 질문에 답변하여 감정 상태를 파악해보세요
+        </DialogDescription>
+
         <div className="bg-card rounded-3xl shadow-2xl border-4 border-accent/30 overflow-hidden">
           {/* Header */}
           <div className="bg-gradient-to-r from-accent/20 to-primary/20 p-6 border-b-2 border-accent/10">
@@ -76,7 +80,7 @@ export function EmotionTestModal({ open, onClose }) {
                 <X className="w-5 h-5" />
               </Button>
             </div>
-            
+
             <div className="space-y-2">
               <div className="flex justify-between text-sm text-muted-foreground">
                 <span>진행률</span>
@@ -101,11 +105,11 @@ export function EmotionTestModal({ open, onClose }) {
                 <button
                   key={index}
                   onClick={() => handleAnswer(index)}
-                  className="w-full p-4 rounded-2xl border-2 border-border bg-card hover:border-accent hover:bg-accent/5 transition-all text-left"
+                  className="group w-full p-4 rounded-2xl border-2 border-border bg-card hover:border-accent hover:bg-accent/5 transition-all text-left"
                 >
                   <div className="flex items-center gap-3">
                     <div className="w-6 h-6 rounded-full border-2 border-accent/30 flex items-center justify-center flex-shrink-0">
-                      <div className="w-3 h-3 rounded-full bg-accent/0 group-hover:bg-accent"></div>
+                      <div className="w-3 h-3 rounded-full bg-accent/0 group-hover:bg-accent transition-all"></div>
                     </div>
                     <span>{option}</span>
                   </div>
@@ -114,7 +118,7 @@ export function EmotionTestModal({ open, onClose }) {
             </div>
           </div>
 
-          {/* Footer Info */}
+          {/* Footer */}
           <div className="px-6 pb-6">
             <p className="text-xs text-center text-muted-foreground">
               답변은 AI 피드백 개선에만 사용돼요

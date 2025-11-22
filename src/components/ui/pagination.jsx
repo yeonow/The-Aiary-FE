@@ -1,12 +1,8 @@
 import * as React from "react";
-import {
-  ChevronLeftIcon,
-  ChevronRightIcon,
-  MoreHorizontalIcon,
-} from "lucide-react@0.487.0";
+import { ChevronLeft, ChevronRight, MoreHorizontal } from "lucide-react";
 
 import { cn } from "./utils";
-import { Button, buttonVariants } from "./button";
+import { buttonVariants } from "./button";
 
 function Pagination({ className, ...props }) {
   return (
@@ -20,10 +16,7 @@ function Pagination({ className, ...props }) {
   );
 }
 
-function PaginationContent({
-  className,
-  ...props
-}) {
+function PaginationContent({ className, ...props }) {
   return (
     <ul
       data-slot="pagination-content"
@@ -37,17 +30,8 @@ function PaginationItem({ ...props }) {
   return <li data-slot="pagination-item" {...props} />;
 }
 
-//type PaginationLinkProps = {
-//  isActive?: boolean;
-//} & Pick<React.ComponentProps<typeof Button>, "size"> &
-  React.ComponentProps<"a">;
-
-function PaginationLink({
-  className,
-  isActive,
-  size = "icon",
-  ...props
-}) {
+// isActive + size props만 직접 받아서 구현하는 JSX 버전
+function PaginationLink({ className, isActive, size = "icon", ...props }) {
   return (
     <a
       aria-current={isActive ? "page" : undefined}
@@ -58,17 +42,14 @@ function PaginationLink({
           variant: isActive ? "outline" : "ghost",
           size,
         }),
-        className,
+        className
       )}
       {...props}
     />
   );
 }
 
-function PaginationPrevious({
-  className,
-  ...props
-}) {
+function PaginationPrevious({ className, ...props }) {
   return (
     <PaginationLink
       aria-label="Go to previous page"
@@ -76,16 +57,13 @@ function PaginationPrevious({
       className={cn("gap-1 px-2.5 sm:pl-2.5", className)}
       {...props}
     >
-      <ChevronLeftIcon />
+      <ChevronLeft />
       <span className="hidden sm:block">Previous</span>
     </PaginationLink>
   );
 }
 
-function PaginationNext({
-  className,
-  ...props
-}) {
+function PaginationNext({ className, ...props }) {
   return (
     <PaginationLink
       aria-label="Go to next page"
@@ -94,15 +72,12 @@ function PaginationNext({
       {...props}
     >
       <span className="hidden sm:block">Next</span>
-      <ChevronRightIcon />
+      <ChevronRight />
     </PaginationLink>
   );
 }
 
-function PaginationEllipsis({
-  className,
-  ...props
-}) {
+function PaginationEllipsis({ className, ...props }) {
   return (
     <span
       aria-hidden
@@ -110,7 +85,7 @@ function PaginationEllipsis({
       className={cn("flex size-9 items-center justify-center", className)}
       {...props}
     >
-      <MoreHorizontalIcon className="size-4" />
+      <MoreHorizontal className="size-4" />
       <span className="sr-only">More pages</span>
     </span>
   );
