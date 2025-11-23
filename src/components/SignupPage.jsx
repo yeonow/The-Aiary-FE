@@ -5,13 +5,9 @@ import { Label } from "./ui/label";
 import { Card } from "./ui/card";
 import { User, Mail, Lock, Heart, Lightbulb, ArrowLeft } from "lucide-react";
 
-//interface SignupPageProps {
-//  onSignup: () => void;
-//  onSignupWithTest: () => void;
-//  onBack: () => void;
-//}
 
 export function SignupPage({ onSignup, onSignupWithTest, onBack }) {
+
   const [step, setStep] = useState(1);
   const [nickname, setNickname] = useState("");
   const [email, setEmail] = useState("");
@@ -223,6 +219,11 @@ export function SignupPage({ onSignup, onSignupWithTest, onBack }) {
               </p>
             </div>
           </Card>
+          <Button
+             onClick = {handleComplete}
+               className="w-full h-12 rounded-xl bg-primary hover:bg-primary/90 shadow-soft mt-4">
+                설정완료
+          </Button>
         </div>
       )}
     </div>

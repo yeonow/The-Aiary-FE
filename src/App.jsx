@@ -51,7 +51,7 @@ export default function App() {
     return (
       <div className="app-container min-h-screen bg-background">
         <SignupPage 
-          onSignup={handleSignup}
+          onSignup={() => setCurrentScreen("login")}
           onSignupWithTest={handleSignupWithTest}
           onBack={() => setCurrentScreen("login")}
         />
