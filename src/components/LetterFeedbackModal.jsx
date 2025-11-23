@@ -33,14 +33,6 @@ export function LetterFeedbackModal({ open, onClose, diaryContent }) {
         >
           {/* Header - Letter Theme */}
           <div className="bg-gradient-to-br from-primary/20 to-yellow-100/40 p-6 border-b relative">
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={onClose}
-              className="absolute top-4 right-4 rounded-full hover:bg-primary/10"
-            >
-              <X className="w-5 h-5" strokeWidth={2} />
-            </Button>
             
             <div className="flex items-center gap-3 mb-2">
               <div className="bg-primary rounded-full p-2">
@@ -110,16 +102,6 @@ export function LetterFeedbackModal({ open, onClose, diaryContent }) {
                 </p>
               </Card>
             </div>
-          </div>
-
-          {/* Close Button */}
-          <div className="px-6 pb-6">
-            <Button 
-              onClick={onClose}
-              className="w-full h-12 rounded-xl bg-primary hover:bg-primary/90 shadow-soft"
-            >
-              닫기
-            </Button>
           </div>
         </div>
       </DialogContent>

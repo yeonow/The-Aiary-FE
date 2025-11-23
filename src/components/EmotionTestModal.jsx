@@ -71,14 +71,7 @@ export function EmotionTestModal({ open, onClose }) {
                 <Sparkles className="w-6 h-6 text-accent" />
                 <h3 className="text-accent">감정 테스트</h3>
               </div>
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={handleClose}
-                className="rounded-full hover:bg-accent/10"
-              >
-                <X className="w-5 h-5" />
-              </Button>
+          
             </div>
 
             <div className="space-y-2">

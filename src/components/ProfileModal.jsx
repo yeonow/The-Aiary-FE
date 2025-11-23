@@ -36,14 +36,7 @@ export function ProfileModal({ open, onClose, nickname, onLogout }) {
           <div className="bg-primary/10 p-6 border-b">
             <div className="flex justify-between items-center">
               <h3 className="text-primary font-medium">프로필 설정</h3>
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={onClose}
-                className="rounded-full hover:bg-primary/10"
-              >
-                <X className="w-5 h-5" strokeWidth={2} />
-              </Button>
+             
             </div>
           </div>
 

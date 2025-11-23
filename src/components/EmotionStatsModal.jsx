@@ -34,15 +34,6 @@ export function EmotionStatsModal({ open, onClose, date }) {
         <div className="bg-card rounded-2xl shadow-soft-lg border overflow-hidden">
           {/* Header */}
           <div className="bg-primary/10 p-6 border-b relative">
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={onClose}
-              className="absolute top-4 right-4 rounded-full hover:bg-primary/10"
-            >
-              <X className="w-5 h-5" strokeWidth={2} />
-            </Button>
-
             <h3 className="text-primary">11월 {date}일</h3>
             <p className="text-sm text-muted-foreground mt-0.5">감정 통계</p>
           </div>

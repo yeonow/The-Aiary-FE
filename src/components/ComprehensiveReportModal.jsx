@@ -290,15 +290,7 @@ export function ComprehensiveReportModal({ open, onClose }) {
 
         <div className="bg-card rounded-2xl shadow-soft-lg border overflow-hidden">
           <div className="bg-gradient-to-br from-primary/20 to-yellow-100/40 p-6 border-b relative">
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={onClose}
-              className="absolute top-4 right-4 rounded-full hover:bg-primary/10"
-            >
-              <X className="w-5 h-5" strokeWidth={2} />
-            </Button>
-
+            
             <div className="flex items-center gap-2 mb-2">
               <CalendarIcon className="w-5 h-5 text-primary" strokeWidth={2} />
               <h3 className="text-primary">기간 선택</h3>
