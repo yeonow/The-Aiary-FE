@@ -8,6 +8,7 @@ import {
 import { Button } from "./ui/button";
 import { Textarea } from "./ui/textarea";
 import { X } from "lucide-react";
+import "../styles/globals.css";
 
 // 감정 목록
 const emotions = [
@@ -76,7 +77,9 @@ export function EmotionRecordModal({ open, onClose }) {
           <div className="p-6 space-y-6">
             {/* Emotion Selection */}
             <div>
-              <h4 className="mb-3 text-foreground">지금 느끼는 감정을 선택해주세요</h4>
+              <h4 className="mb-3 text-foreground">
+                지금 느끼는 감정을 선택해주세요
+              </h4>
 
               <div className="flex flex-wrap gap-2.5">
                 {emotions.map((emotion) => {
@@ -105,8 +108,10 @@ export function EmotionRecordModal({ open, onClose }) {
               <Textarea
                 value={reason}
                 onChange={(e) => setReason(e.target.value)}
-                placeholder={"어떤 일이 있었나요?\n예: 친구와 즐거운 시간을 보냈어요"}
-                className="min-h-[120px] rounded-xl border resize-none"
+                placeholder={
+                  "어떤 일이 있었나요?\n예: 친구와 즐거운 시간을 보냈어요"
+                }
+                className="min-h-[120px] rounded-xl border resize-none letter-font"
               />
             </div>
           </div>

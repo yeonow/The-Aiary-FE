@@ -1,32 +1,40 @@
 @import "tailwindcss";
 
 @theme {
-  --color-background: #FEFEF5;
-  --color-foreground: #4A5947;
-  --color-card: #FFFFFF;
-  --color-card-foreground: #4A5947;
-  --color-primary: #B8D4A0;
-  --color-primary-foreground: #3D4A34;
-  --color-secondary: #F5E9A8;
-  --color-secondary-foreground: #5A5334;
-  --color-muted: #E8EFE3;
-  --color-muted-foreground: #6B7569;
-  --color-accent: #D4E5B8;
-  --color-accent-foreground: #3D4A34;
-  --color-destructive: #E5A5A5;
-  --color-destructive-foreground: #FFFFFF;
-  --color-border: #D8E5CA;
-  --color-input: #D8E5CA;
-  --color-ring: #B8D4A0;
+  --color-background: #fefef5;
+  --color-foreground: #4a5947;
+  --color-card: #ffffff;
+  --color-card-foreground: #4a5947;
+  --color-primary: #b8d4a0;
+  --color-primary-foreground: #3d4a34;
+  --color-secondary: #f5e9a8;
+  --color-secondary-foreground: #5a5334;
+  --color-muted: #e8efe3;
+  --color-muted-foreground: #6b7569;
+  --color-accent: #d4e5b8;
+  --color-accent-foreground: #3d4a34;
+  --color-destructive: #e5a5a5;
+  --color-destructive-foreground: #ffffff;
+  --color-border: #d8e5ca;
+  --color-input: #d8e5ca;
+  --color-ring: #b8d4a0;
   --radius: 0.75rem;
 
   /* Emotion colors - pastel */
-  --color-happy: #FFF4B3;
-  --color-sad: #B3D9E5;
-  --color-angry: #E5B3B3;
-  --color-anxious: #D4C4E5;
-  --color-calm: #C4E5D4;
-  --color-excited: #FFE0A3;
+  --color-happy: #fff4b3;
+  --color-sad: #b3d9e5;
+  --color-angry: #e5b3b3;
+  --color-anxious: #d4c4e5;
+  --color-calm: #c4e5d4;
+  --color-excited: #ffe0a3;
+}
+
+@font-face {
+  font-family: "OngleipWFontList";
+  src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/2501-1@1.1/Ownglyph_wiseelist-Rg.woff2")
+    format("woff2");
+  font-weight: normal;
+  font-display: swap;
 }
 
 * {
@@ -34,9 +42,10 @@
 }
 
 body {
-  background: linear-gradient(135deg, #F5F9F0 0%, #FFFEF0 50%, #F5F9F0 100%);
+  background: linear-gradient(135deg, #f5f9f0 0%, #fffef0 50%, #f5f9f0 100%);
   color: var(--color-foreground);
-  font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Pretendard", "Malgun Gothic", sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo",
+    "Pretendard", "Malgun Gothic", sans-serif;
   min-height: 100vh;
   margin: 0;
   padding: 0;
@@ -57,6 +66,11 @@ body {
   margin: 0 auto;
 }
 
+.letter-font {
+  font-family: "OngleipWFontList", system-ui, -apple-system, BlinkMacSystemFont,
+    "Segoe UI", sans-serif;
+}
+
 /* Mobile-first approach */
 @media (max-width: 390px) {
   .app-container {
@@ -67,9 +81,9 @@ body {
 /* Desktop view - centered with max width */
 @media (min-width: 391px) {
   #root {
-    background: linear-gradient(135deg, #F5F9F0 0%, #FFFEF0 50%, #F5F9F0 100%);
+    background: linear-gradient(135deg, #f5f9f0 0%, #fffef0 50%, #f5f9f0 100%);
   }
-  
+
   .app-container {
     box-shadow: 0 0 40px rgba(0, 0, 0, 0.08);
   }

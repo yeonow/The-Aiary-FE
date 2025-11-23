@@ -1,8 +1,14 @@
 import { useState } from "react";
-import { Dialog, DialogContent, DialogTitle, DialogDescription } from "./ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  DialogDescription,
+} from "./ui/dialog";
 import { Button } from "./ui/button";
 import { Textarea } from "./ui/textarea";
 import { X } from "lucide-react";
+import "../styles/globals.css";
 
 export function DiaryWriteModal({ open, onClose, onSaved }) {
   const [content, setContent] = useState("");
@@ -20,14 +26,12 @@ export function DiaryWriteModal({ open, onClose, onSaved }) {
     year: "numeric",
     month: "long",
     day: "numeric",
-    weekday: "long"
+    weekday: "long",
   });
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent
-        className="max-w-[350px] p-0 bg-transparent border-none shadow-none"
-      >
+      <DialogContent className="max-w-[350px] p-0 bg-transparent border-none shadow-none">
         <DialogTitle className="sr-only">일기 쓰기</DialogTitle>
         <DialogDescription className="sr-only">
           오늘의 일기를 작성하세요
@@ -54,8 +58,10 @@ export function DiaryWriteModal({ open, onClose, onSaved }) {
             <Textarea
               value={content}
               onChange={(e) => setContent(e.target.value)}
-              placeholder={"오늘 하루는 어땠나요?\n마음껏 이야기를 적어보세요..."}
-              className="min-h-[300px] rounded-xl border resize-none text-foreground placeholder:text-muted-foreground/50"
+              placeholder={
+                "오늘 하루는 어땠나요?\n마음껏 이야기를 적어보세요..."
+              }
+              className="min-h-[300px] rounded-xl border resize-none text-foreground placeholder:text-muted-foreground/50 letter-font"
             />
           </div>
 
