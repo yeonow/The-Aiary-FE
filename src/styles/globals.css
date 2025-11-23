@@ -1,0 +1,114 @@
+@import "tailwindcss";
+
+@theme {
+  --color-background: #FEFEF5;
+  --color-foreground: #4A5947;
+  --color-card: #FFFFFF;
+  --color-card-foreground: #4A5947;
+  --color-primary: #B8D4A0;
+  --color-primary-foreground: #3D4A34;
+  --color-secondary: #F5E9A8;
+  --color-secondary-foreground: #5A5334;
+  --color-muted: #E8EFE3;
+  --color-muted-foreground: #6B7569;
+  --color-accent: #D4E5B8;
+  --color-accent-foreground: #3D4A34;
+  --color-destructive: #E5A5A5;
+  --color-destructive-foreground: #FFFFFF;
+  --color-border: #D8E5CA;
+  --color-input: #D8E5CA;
+  --color-ring: #B8D4A0;
+  --radius: 0.75rem;
+
+  /* Emotion colors - pastel */
+  --color-happy: #FFF4B3;
+  --color-sad: #B3D9E5;
+  --color-angry: #E5B3B3;
+  --color-anxious: #D4C4E5;
+  --color-calm: #C4E5D4;
+  --color-excited: #FFE0A3;
+}
+
+* {
+  border-color: var(--color-border);
+}
+
+body {
+  background: linear-gradient(135deg, #F5F9F0 0%, #FFFEF0 50%, #F5F9F0 100%);
+  color: var(--color-foreground);
+  font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Pretendard", "Malgun Gothic", sans-serif;
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+}
+
+#root {
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+/* App container */
+.app-container {
+  width: 100%;
+  max-width: 390px;
+  min-height: 100vh;
+  margin: 0 auto;
+}
+
+/* Mobile-first approach */
+@media (max-width: 390px) {
+  .app-container {
+    max-width: 100vw;
+  }
+}
+
+/* Desktop view - centered with max width */
+@media (min-width: 391px) {
+  #root {
+    background: linear-gradient(135deg, #F5F9F0 0%, #FFFEF0 50%, #F5F9F0 100%);
+  }
+  
+  .app-container {
+    box-shadow: 0 0 40px rgba(0, 0, 0, 0.08);
+  }
+}
+
+h1 {
+  font-size: 1.875rem;
+  font-weight: 600;
+  line-height: 2.25rem;
+}
+
+h2 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  line-height: 2rem;
+}
+
+h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  line-height: 1.75rem;
+}
+
+h4 {
+  font-size: 1.125rem;
+  font-weight: 600;
+  line-height: 1.5rem;
+}
+
+p {
+  font-size: 1rem;
+  line-height: 1.5rem;
+}
+
+/* Soft shadow utilities */
+.shadow-soft {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.shadow-soft-lg {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+}
