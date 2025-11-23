@@ -4,6 +4,7 @@ import { Input } from "./ui/input";
 import { Label } from "./ui/label";
 import { Card } from "./ui/card";
 import { Clover, Mail, Lock } from "lucide-react";
+import { login } from "../api/auth";
 
 //interface LoginPageProps {
 //  onLogin: () => void;
@@ -14,8 +15,26 @@ export function LoginPage({ onLogin, onSignup }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleLogin = () => {
-    onLogin();
+  const handleLogin = async () => {
+    if (!email || !password) {
+      alert("이메일과 비밀번호를 입력해주세요.");
+      return;
+    }
+
+    try {
+      const data = await login({ email, password });
+      console.log("로그인 성공 응답", data);
+
+      localStorage.setItem("email", email);
+
+      alert("로그인에 성공했습니다 !");
+
+      if (onLogin) {
+        onLogin(data);
+      }
+    } catch (err) {
+      alert(err.message);
+    }
   };
 
   return (
@@ -34,7 +53,10 @@ export function LoginPage({ onLogin, onSignup }) {
           <div className="space-y-2">
             <Label htmlFor="email">이메일</Label>
             <div className="relative">
-              <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-muted-foreground" strokeWidth={2} />
+              <Mail
+                className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-muted-foreground"
+                strokeWidth={2}
+              />
               <Input
                 id="email"
                 type="email"
@@ -49,7 +71,10 @@ export function LoginPage({ onLogin, onSignup }) {
           <div className="space-y-2">
             <Label htmlFor="password">비밀번호</Label>
             <div className="relative">
-              <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-muted-foreground" strokeWidth={2} />
+              <Lock
+                className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-muted-foreground"
+                strokeWidth={2}
+              />
               <Input
                 id="password"
                 type="password"
@@ -61,7 +86,7 @@ export function LoginPage({ onLogin, onSignup }) {
             </div>
           </div>
 
-          <Button 
+          <Button
             onClick={handleLogin}
             className="w-full h-12 rounded-xl bg-primary hover:bg-primary/90 text-primary-foreground shadow-soft mt-6"
           >
@@ -72,8 +97,8 @@ export function LoginPage({ onLogin, onSignup }) {
 
       <div className="mt-8 text-center">
         <p className="text-muted-foreground mb-3">계정이 없으신가요?</p>
-        <Button 
-          variant="ghost" 
+        <Button
+          variant="ghost"
           onClick={onSignup}
           className="text-primary hover:text-primary/80 hover:bg-primary/10 rounded-xl px-6"
         >
