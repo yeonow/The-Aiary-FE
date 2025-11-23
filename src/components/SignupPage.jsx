@@ -8,46 +8,61 @@ import { signup } from "../api/auth";
 
 export function SignupPage({ onSignup, onSignupWithTest, onBack }) {
   const [step, setStep] = useState(1);
+
   const [nickname, setNickname] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [feedbackStyle, setFeedbackStyle] = useState("comfort");
+
+  const [feedbackStyle, setFeedbackStyle] = useState("COMFORT"); // ENUM 정확히 맞춤
   const [timeOfDay, setTimeOfDay] = useState("pm");
+
   const [notificationHour, setNotificationHour] = useState("9");
   const [notificationMinute, setNotificationMinute] = useState("00");
 
   const handleNext = () => {
-    if (step === 1 && nickname && email && password && confirmPassword) {
-      if (password === confirmPassword) {
-        setStep(2);
-      }
+    if (!nickname.trim() || !email.trim() || !password.trim() || !confirmPassword.trim()) {
+      alert("모든 필드를 입력해주세요!");
+      return;
     }
+
+    if (password !== confirmPassword) {
+      alert("비밀번호가 서로 다릅니다!");
+      return;
+    }
+
+    setStep(2);
   };
 
   const handleComplete = async () => {
     const hour = String(notificationHour).padStart(2, "0");
     const minute = String(notificationMinute).padStart(2, "0");
+
     const notificationTime = `${hour}:${minute}`;
     const notificationAm = timeOfDay === "am";
+
     try {
       await signup({
         email,
         password,
         nickname,
-        feedbackStyle,
-        notificationAm,
-        notificationTime,
+        feedbackStyle,       // "COMFORT" or "REALITY"
+        notificationAm,      // Boolean
+        notificationTime,    // "09:00"
       });
+
       alert("회원가입이 완료되었습니다!");
       onSignup();
     } catch (err) {
-      console.log(err.message);
+      console.error(err);
+      alert("회원가입 중 오류가 발생했습니다.\n" + err.message);
     }
   };
 
   return (
     <div className="min-h-screen flex flex-col p-6 w-full">
+      
+      {/* Header */}
       <div className="flex items-center mb-6">
         <Button
           variant="ghost"
@@ -61,31 +76,23 @@ export function SignupPage({ onSignup, onSignupWithTest, onBack }) {
         <div className="w-10" />
       </div>
 
-      {/* Progress dots */}
+      {/* Progress */}
       <div className="flex justify-center gap-2 mb-8">
-        <div
-          className={`h-2 rounded-full transition-all ${
-            step === 1 ? "bg-primary w-8" : "bg-muted w-2"
-          }`}
-        ></div>
-        <div
-          className={`h-2 rounded-full transition-all ${
-            step === 2 ? "bg-primary w-8" : "bg-muted w-2"
-          }`}
-        ></div>
+        <div className={`h-2 rounded-full transition-all ${step === 1 ? "bg-primary w-8" : "bg-muted w-2"}`}></div>
+        <div className={`h-2 rounded-full transition-all ${step === 2 ? "bg-primary w-8" : "bg-muted w-2"}`}></div>
       </div>
 
+      {/* STEP 1 */}
       {step === 1 && (
         <div className="flex-1 flex flex-col">
           <Card className="p-6 rounded-2xl shadow-soft-lg border bg-card">
             <div className="space-y-5">
+
+              {/* Nickname */}
               <div className="space-y-2">
                 <Label htmlFor="nickname">닉네임</Label>
                 <div className="relative">
-                  <User
-                    className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-muted-foreground"
-                    strokeWidth={2}
-                  />
+                  <User className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
                   <Input
                     id="nickname"
                     placeholder="이름을 입력해주세요"
@@ -96,13 +103,11 @@ export function SignupPage({ onSignup, onSignupWithTest, onBack }) {
                 </div>
               </div>
 
+              {/* Email */}
               <div className="space-y-2">
                 <Label htmlFor="email">이메일</Label>
                 <div className="relative">
-                  <Mail
-                    className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-muted-foreground"
-                    strokeWidth={2}
-                  />
+                  <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
                   <Input
                     id="email"
                     type="email"
@@ -114,13 +119,11 @@ export function SignupPage({ onSignup, onSignupWithTest, onBack }) {
                 </div>
               </div>
 
+              {/* Password */}
               <div className="space-y-2">
                 <Label htmlFor="password">비밀번호</Label>
                 <div className="relative">
-                  <Lock
-                    className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-muted-foreground"
-                    strokeWidth={2}
-                  />
+                  <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
                   <Input
                     id="password"
                     type="password"
@@ -132,13 +135,11 @@ export function SignupPage({ onSignup, onSignupWithTest, onBack }) {
                 </div>
               </div>
 
+              {/* Confirm Password */}
               <div className="space-y-2">
                 <Label htmlFor="confirmPassword">비밀번호 확인</Label>
                 <div className="relative">
-                  <Lock
-                    className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-muted-foreground"
-                    strokeWidth={2}
-                  />
+                  <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
                   <Input
                     id="confirmPassword"
                     type="password"
@@ -161,13 +162,17 @@ export function SignupPage({ onSignup, onSignupWithTest, onBack }) {
         </div>
       )}
 
+      {/* STEP 2 */}
       {step === 2 && (
         <div className="flex-1 flex flex-col">
           <Card className="p-6 rounded-2xl shadow-soft-lg border bg-card mb-4">
             <div className="space-y-6">
+
+              {/* Feedback Style */}
               <div>
                 <Label className="mb-3 block">AI 피드백 스타일</Label>
                 <div className="grid grid-cols-2 gap-3">
+
                   <button
                     onClick={() => setFeedbackStyle("COMFORT")}
                     className={`p-5 rounded-xl border-2 transition-all ${
@@ -176,12 +181,10 @@ export function SignupPage({ onSignup, onSignupWithTest, onBack }) {
                         : "border-border bg-card"
                     }`}
                   >
-                    <Heart
-                      className="w-7 h-7 mx-auto mb-2 text-primary"
-                      strokeWidth={2}
-                    />
+                    <Heart className="w-7 h-7 mx-auto mb-2 text-primary" />
                     <p className="text-sm font-medium">위로</p>
                   </button>
+
                   <button
                     onClick={() => setFeedbackStyle("REALITY")}
                     className={`p-5 rounded-xl border-2 transition-all ${
@@ -190,19 +193,18 @@ export function SignupPage({ onSignup, onSignupWithTest, onBack }) {
                         : "border-border bg-card"
                     }`}
                   >
-                    <Lightbulb
-                      className="w-7 h-7 mx-auto mb-2 text-secondary-foreground"
-                      strokeWidth={2}
-                    />
+                    <Lightbulb className="w-7 h-7 mx-auto mb-2 text-secondary-foreground" />
                     <p className="text-sm font-medium">조언</p>
                   </button>
+
                 </div>
               </div>
 
+              {/* Notification Time */}
               <div className="space-y-3">
                 <Label>일일 알림 시간</Label>
 
-                {/* AM/PM Toggle */}
+                {/* AM/PM */}
                 <div className="flex gap-2">
                   <button
                     onClick={() => setTimeOfDay("am")}
@@ -214,6 +216,7 @@ export function SignupPage({ onSignup, onSignupWithTest, onBack }) {
                   >
                     오전
                   </button>
+
                   <button
                     onClick={() => setTimeOfDay("pm")}
                     className={`flex-1 py-3 rounded-xl border-2 transition-all ${
@@ -226,7 +229,7 @@ export function SignupPage({ onSignup, onSignupWithTest, onBack }) {
                   </button>
                 </div>
 
-                {/* Time Input */}
+                {/* Time input */}
                 <div className="flex gap-2 items-center">
                   <Input
                     type="number"
@@ -235,7 +238,6 @@ export function SignupPage({ onSignup, onSignupWithTest, onBack }) {
                     value={notificationHour}
                     onChange={(e) => setNotificationHour(e.target.value)}
                     className="flex-1 rounded-xl h-12 text-center"
-                    placeholder="00"
                   />
                   <span className="text-lg">:</span>
                   <Input
@@ -245,27 +247,29 @@ export function SignupPage({ onSignup, onSignupWithTest, onBack }) {
                     value={notificationMinute}
                     onChange={(e) => setNotificationMinute(e.target.value)}
                     className="flex-1 rounded-xl h-12 text-center"
-                    placeholder="00"
                   />
                 </div>
               </div>
+
             </div>
           </Card>
 
+          {/* 안내 카드 */}
           <Card className="p-5 rounded-2xl shadow-soft border bg-accent/10 mb-5">
-            <div className="text-center">
-              <p className="text-sm mb-5 leading-relaxed">
-                로그인 후 심리 테스트를 하면
-                <br />더 맞춤형 AI 피드백을 받을 수 있어요
-              </p>
-            </div>
+            <p className="text-sm text-center mb-5 leading-relaxed">
+              로그인 후 심리 테스트를 하면<br />
+              더 맞춤형 AI 피드백을 받을 수 있어요
+            </p>
           </Card>
+
+          {/* Submit */}
           <Button
             onClick={handleComplete}
             className="w-full h-12 rounded-xl bg-primary hover:bg-primary/90 shadow-soft mt-4"
           >
             설정완료
           </Button>
+
         </div>
       )}
     </div>
