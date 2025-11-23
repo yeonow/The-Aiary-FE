@@ -5,17 +5,11 @@ import {
   DialogTitle,
   DialogDescription,
 } from "./ui/dialog";
-import { Button } from "./ui/button";
 import { Card } from "./ui/card";
-import { X, Heart, BookOpen, Music, Lightbulb, Mail } from "lucide-react";
+import { Heart, BookOpen, Music, Lightbulb, Mail } from "lucide-react";
 import "../styles/globals.css";
-//interface LetterFeedbackModalProps {
-//  open: boolean;
-//  onClose: () => void;
-//  diaryContent: string;
-//}
 
-export function LetterFeedbackModal({ open, onClose, diaryContent }) {
+export function LetterFeedbackModal({ open, onClose, diary }) {
   const [hasAnimated, setHasAnimated] = useState(false);
 
   useEffect(() => {
@@ -24,6 +18,19 @@ export function LetterFeedbackModal({ open, onClose, diaryContent }) {
     }
   }, [open, hasAnimated]);
 
+  if (!open) return null;
+
+  // 🟣 diary가 없으면 (안 넘어오면)
+  if (!diary) {
+    return (
+      <Dialog open={open} onOpenChange={onClose}>
+        <DialogContent className="p-6 text-center">
+          <p>분석된 결과가 없습니다.</p>
+        </DialogContent>
+      </Dialog>
+    );
+  }
+
   return (
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent className="max-w-[350px] w-[calc(100%-2rem)] p-0 bg-transparent border-none shadow-none max-h-[90vh] overflow-y-auto">
@@ -31,6 +38,8 @@ export function LetterFeedbackModal({ open, onClose, diaryContent }) {
         <DialogDescription className="sr-only">
           당신의 일기에 대한 AI의 피드백입니다
         </DialogDescription>
+
+        {/* AI 결과 표시 */}
         <div
           className={`bg-card rounded-2xl shadow-soft-lg border overflow-hidden transition-all duration-700 ${
             hasAnimated
@@ -38,94 +47,71 @@ export function LetterFeedbackModal({ open, onClose, diaryContent }) {
               : "opacity-0 scale-90 translate-y-[-20px]"
           }`}
         >
-          {/* Header - Letter Theme */}
-          <div className="bg-gradient-to-br from-primary/20 to-yellow-100/40 p-6 border-b relative">
+          {/* Header */}
+          <div className="bg-gradient-to-br from-primary/20 to-yellow-100/40 p-6 border-b">
             <div className="flex items-center gap-3 mb-2">
               <div className="bg-primary rounded-full p-2">
-                <Mail
-                  className="w-5 h-5 text-primary-foreground"
-                  strokeWidth={2}
-                />
+                <Mail className="w-5 h-5 text-primary-foreground" />
               </div>
               <h3 className="text-primary">당신에게 편지가 도착했어요</h3>
             </div>
-            <p className="text-sm text-muted-foreground">
-              AI가 보내는 따뜻한 이야기
-            </p>
+            <p className="text-sm text-muted-foreground">AI가 보내는 이야기</p>
           </div>
 
-          {/* Content */}
+          {/* Main Content */}
           <div className="p-6 space-y-5">
-            {/* Main Feedback Card */}
+            {/* 감정 분석 카드 */}
             <Card className="p-5 rounded-xl border bg-primary/10 shadow-soft">
               <div className="flex items-center gap-2 mb-3">
-                <Heart
-                  className="w-5 h-5 text-primary"
-                  strokeWidth={2}
-                  fill="currentColor"
-                />
+                <Heart className="w-5 h-5 text-primary" />
                 <h4 className="text-primary font-medium">오늘의 감정 분석</h4>
               </div>
+
               <div className="mb-3">
-                <div className="inline-block bg-card rounded-full px-4 py-2 mb-3 shadow-soft">
+                <div className="inline-block bg-card rounded-full px-4 py-2 shadow-soft">
                   <span className="text-sm font-medium text-foreground">
-                    행복
+                    {diary.emotion || "감정 분석 없음"}
                   </span>
                 </div>
               </div>
+
               <p className="text-sm text-foreground/80 leading-relaxed letter-font">
-                오늘 일기를 읽으며 따뜻한 행복이 느껴졌어요. 친구와의 시간은
-                정말 소중해요. 이런 작은 연결의 순간들이 삶에 많은 기쁨을
-                가져다주죠.
+                {diary.reply || "AI 응답이 없습니다."}
               </p>
             </Card>
 
-            {/* Recommendations */}
-            <div className="space-y-3">
-              <Card className="p-4 rounded-xl border bg-muted/20 shadow-soft hover:shadow-soft-lg transition-all">
+            {/* 추천 책 */}
+            {diary.book && (
+              <Card className="p-4 rounded-xl border bg-muted/20 shadow-soft">
                 <div className="flex items-center gap-2 mb-2">
-                  <BookOpen
-                    className="w-4 h-4 text-foreground"
-                    strokeWidth={2}
-                  />
-                  <span className="text-sm font-medium text-foreground">
-                    추천 책
-                  </span>
+                  <BookOpen className="w-4 h-4" />
+                  <span className="text-sm font-medium">추천 책</span>
                 </div>
-                <p className="text-sm text-foreground mb-1 letter-font">
-                  "우정에 관한 이야기"
-                </p>
+                <p className="text-sm letter-font">{diary.book}</p>
               </Card>
+            )}
 
-              <Card className="p-4 rounded-xl border bg-muted/20 shadow-soft hover:shadow-soft-lg transition-all">
+            {/* 추천 음악 */}
+            {diary.music && (
+              <Card className="p-4 rounded-xl border bg-muted/20 shadow-soft">
                 <div className="flex items-center gap-2 mb-2">
-                  <Music className="w-4 h-4 text-foreground" strokeWidth={2} />
-                  <span className="text-sm font-medium text-foreground">
-                    추천 음악
-                  </span>
+                  <Music className="w-4 h-4" />
+                  <span className="text-sm font-medium">추천 음악</span>
                 </div>
-                <p className="text-sm text-foreground mb-1 letter-font">
-                  "Good Day - 좋은 하루"
-                </p>
+                <p className="text-sm letter-font">{diary.music}</p>
               </Card>
+            )}
 
-              <Card className="p-4 rounded-xl border bg-muted/20 shadow-soft hover:shadow-soft-lg transition-all">
-                <div className="flex items-center gap-2 mb-2">
-                  <Lightbulb
-                    className="w-4 h-4 text-foreground"
-                    strokeWidth={2}
-                  />
-                  <span className="text-sm font-medium text-foreground">
-                    당신에게
-                  </span>
-                </div>
-                <p className="text-xs text-foreground/80 leading-relaxed letter-font">
-                  오늘처럼 소중한 사람들과 시간을 보내는 것은 정말 중요해요.
-                  이런 순간들이 우리 삶에 활력을 주고 스트레스를 풀어주죠.
-                  앞으로도 이런 행복한 순간들을 많이 만들어가세요! 💚
-                </p>
-              </Card>
-            </div>
+            {/* AI 메시지 */}
+            <Card className="p-4 rounded-xl border bg-muted/20 shadow-soft">
+              <div className="flex items-center gap-2 mb-2">
+                <Lightbulb className="w-4 h-4" />
+                <span className="text-sm font-medium">당신에게</span>
+              </div>
+              <p className="text-xs leading-relaxed letter-font">
+                {diary.message || diary.reply || "따뜻한 메시지가 없습니다."}
+              </p>
+            </Card>
           </div>
         </div>
       </DialogContent>

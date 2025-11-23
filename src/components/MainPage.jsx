@@ -18,32 +18,11 @@ export function MainPage({ onLogout }) {
   const [showLetterModal, setShowLetterModal] = useState(false);
   const [showEmotionModal, setShowEmotionModal] = useState(false);
   const [showProfileModal, setShowProfileModal] = useState(false);
-  const [savedDiaryContent, setSavedDiaryContent] = useState("");
-  const [nickname, setNickname] = useState("");
-  const [profile, setProfile] = useState(null);
 
-  useEffect(() => {
-    async function fetchProfile() {
-      try {
-        const data = await getProfile();
-        console.log("응답:", data);
-
-        setNickname(data.nickname);
-        setProfile(data);
-      } catch (err) {
-        console.error("프로필 불러오기 실패:", err);
-      }
-    }
-
-    fetchProfile();
-  }, []);
-
-  const handleDiarySaved = (content) => {
-    setSavedDiaryContent(content);
-    // Show letter feedback modal after diary is saved
-    setTimeout(() => {
-      setShowLetterModal(true);
-    }, 300);
+  const [savedDiary, setSavedDiary] = useState(null);
+  const handleDiarySaved = (diary) => {
+    setSavedDiary(diary);
+    setShowLetterModal(true);
   };
 
   return (
@@ -133,11 +112,10 @@ export function MainPage({ onLogout }) {
         onClose={() => setShowDiaryModal(false)}
         onSaved={handleDiarySaved}
       />
-
       <LetterFeedbackModal
         open={showLetterModal}
         onClose={() => setShowLetterModal(false)}
-        diaryContent={savedDiaryContent}
+        diary={savedDiary}
       />
 
       <EmotionRecordModal
