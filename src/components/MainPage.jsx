@@ -17,15 +17,12 @@ export function MainPage({ nickname, onLogout }) {
   const [showLetterModal, setShowLetterModal] = useState(false);
   const [showEmotionModal, setShowEmotionModal] = useState(false);
   const [showProfileModal, setShowProfileModal] = useState(false);
-  const [savedDiaryContent, setSavedDiaryContent] = useState("");
 
-  const handleDiarySaved = ( content) => {
-    setSavedDiaryContent(content);
-    // Show letter feedback modal after diary is saved
-    setTimeout(() => {
-      setShowLetterModal(true);
-    }, 300);
-  };
+  const [savedDiary, setSavedDiary] = useState(null);
+  const handleDiarySaved = (diary) => {
+  setSavedDiary(diary);
+  setShowLetterModal(true);
+};
 
   return (
     <div className="min-h-screen pb-24 w-full">
@@ -101,17 +98,18 @@ export function MainPage({ nickname, onLogout }) {
 
       {/* Modals */}
       <DiaryWriteModal
-        open={showDiaryModal}
-        onClose={() => setShowDiaryModal(false)}
-        onSaved={handleDiarySaved}
+      open={showDiaryModal}
+      onClose={() => setShowDiaryModal(false)}
+      onSaved={handleDiarySaved}
       />
-
       <LetterFeedbackModal
-        open={showLetterModal}
-        onClose={() => setShowLetterModal(false)}
-        diaryContent={savedDiaryContent}
+      open={showLetterModal}
+      onClose={() => setShowLetterModal(false)}
+      diary={savedDiary}
+      
       />
 
+      
       <EmotionRecordModal
         open={showEmotionModal}
         onClose={() => setShowEmotionModal(false)}
