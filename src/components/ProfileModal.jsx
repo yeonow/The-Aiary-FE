@@ -1,10 +1,17 @@
-import { useState } from "react";
-import { Dialog, DialogContent, DialogTitle, DialogDescription } from "./ui/dialog";
+// src/components/ProfileModal.jsx (예시 경로)
+
+import { useState, useEffect } from "react";
+import {
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  DialogDescription,
+} from "./ui/dialog";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
-import { Card } from "./ui/card";
-import { X, User, Heart, Lightbulb, LogOut } from "lucide-react";
+import { User, Heart, Lightbulb, LogOut } from "lucide-react";
+import { getProfile } from "../api/profile";
 
 //interface ProfileModalProps {
 //  open: boolean;
@@ -14,29 +21,110 @@ import { X, User, Heart, Lightbulb, LogOut } from "lucide-react";
 //}
 
 export function ProfileModal({ open, onClose, nickname, onLogout }) {
-  const [editedNickname, setEditedNickname] = useState(nickname);
+  const [editedNickname, setEditedNickname] = useState(nickname || "");
   const [timeOfDay, setTimeOfDay] = useState("pm");
   const [notificationHour, setNotificationHour] = useState("9");
   const [notificationMinute, setNotificationMinute] = useState("00");
   const [feedbackStyle, setFeedbackStyle] = useState("comfort");
+  const [profile, setProfile] = useState(null);
+  // ✅ 모달이 열릴 때 /api/profile에서 회원 정보 불러오기
+  useEffect(() => {
+    if (!open) return; // 닫혀 있으면 굳이 호출 안 함
 
-  const handleSave = () => {
-    onClose();
+    const fetchProfile = async () => {
+      try {
+        const data = await getProfile();
+
+        setProfile(data);
+
+        // 1) 닉네임
+        if (data.nickname) {
+          setEditedNickname(data.nickname);
+        }
+
+        // 2) 피드백 스타일 (백엔드: "COMFORT" / "ADVICE")
+        if (data.feedbackStyle === "COMFORT") {
+          setFeedbackStyle("comfort");
+        } else if (data.feedbackStyle === "ADVICE") {
+          setFeedbackStyle("advice");
+        }
+
+        // 3) 알림 시간
+        if (data.notificationTime) {
+          const hour24 = data.notificationTime.hour ?? 0;
+          const minute = data.notificationTime.minute ?? 0;
+
+          if (data.notificationAm) {
+            // 오전
+            setTimeOfDay("am");
+            const h12 = hour24 === 0 ? 12 : hour24; // 0시는 12시로
+            setNotificationHour(String(h12));
+          } else {
+            // 오후
+            setTimeOfDay("pm");
+            // 13~23시는 1~11시로 바꾸기
+            const h12 = hour24 > 12 ? hour24 - 12 : hour24;
+            setNotificationHour(String(h12 || 12));
+          }
+          setNotificationMinute(String(minute).padStart(2, "0"));
+        }
+      } catch (err) {
+        console.error("프로필 불러오기 실패:", err);
+      }
+    };
+
+    fetchProfile();
+  }, [open]);
+
+  const handleSave = async () => {
+    try {
+      // 1) 12시간 → 24시간 변환
+      let hour = Number(notificationHour);
+
+      if (timeOfDay === "am") {
+        if (hour === 12) hour = 0; // 오전 12시(=00)
+      } else {
+        if (hour !== 12) hour += 12; // 오후이면서 12시는 그대로 12
+      }
+
+      // 2) "HH:MM" 문자열 만들기
+      const notificationTimeString = `${String(hour).padStart(2, "0")}:${String(
+        notificationMinute
+      ).padStart(2, "0")}`;
+
+      // 3) 서버로 보낼 JSON
+      const body = {
+        email: profile.email,
+        password: profile.password, // 비밀번호도 요구한다면 기존값 유지해서 보내야 함
+        nickname: editedNickname,
+        feedbackStyle: feedbackStyle === "comfort" ? "COMFORT" : "ADVICE",
+        notificationAm: timeOfDay === "am",
+        notificationTime: notificationTimeString,
+      };
+
+      // 4) 실제 요청
+      await updateProfile(profile.email, body);
+
+      alert("프로필이 저장되었습니다!");
+      onClose();
+    } catch (err) {
+      console.error(err);
+      alert("프로필 저장 실패 ㅠㅠ");
+    }
   };
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent 
-        className="max-w-[350px] p-0 bg-transparent border-none shadow-none"
-      >
+      <DialogContent className="max-w-[350px] p-0 bg-transparent border-none shadow-none">
         <DialogTitle className="sr-only">프로필 설정</DialogTitle>
-        <DialogDescription className="sr-only">프로필과 설정을 관리하세요</DialogDescription>
+        <DialogDescription className="sr-only">
+          프로필과 설정을 관리하세요
+        </DialogDescription>
         <div className="bg-card rounded-2xl shadow-soft-lg border overflow-hidden">
           {/* Header */}
           <div className="bg-primary/10 p-6 border-b">
             <div className="flex justify-between items-center">
               <h3 className="text-primary font-medium">프로필 설정</h3>
-             
             </div>
           </div>
 
@@ -59,7 +147,7 @@ export function ProfileModal({ open, onClose, nickname, onLogout }) {
             {/* Notification Time Card */}
             <div className="space-y-3">
               <Label>알림 시간</Label>
-              
+
               {/* AM/PM Toggle */}
               <div className="flex gap-2">
                 <button
@@ -120,7 +208,10 @@ export function ProfileModal({ open, onClose, nickname, onLogout }) {
                       : "border-border bg-card"
                   }`}
                 >
-                  <Heart className="w-6 h-6 mx-auto mb-2 text-primary" strokeWidth={2} />
+                  <Heart
+                    className="w-6 h-6 mx-auto mb-2 text-primary"
+                    strokeWidth={2}
+                  />
                   <p className="text-sm">위로</p>
                 </button>
                 <button
@@ -131,7 +222,10 @@ export function ProfileModal({ open, onClose, nickname, onLogout }) {
                       : "border-border bg-card"
                   }`}
                 >
-                  <Lightbulb className="w-6 h-6 mx-auto mb-2 text-secondary-foreground" strokeWidth={2} />
+                  <Lightbulb
+                    className="w-6 h-6 mx-auto mb-2 text-secondary-foreground"
+                    strokeWidth={2}
+                  />
                   <p className="text-sm">조언</p>
                 </button>
               </div>
@@ -140,13 +234,13 @@ export function ProfileModal({ open, onClose, nickname, onLogout }) {
 
           {/* Actions */}
           <div className="p-6 pt-0 space-y-3">
-            <Button 
+            <Button
               onClick={handleSave}
               className="w-full h-12 rounded-xl bg-primary hover:bg-primary/90 shadow-soft"
             >
               저장하기
             </Button>
-            <Button 
+            <Button
               onClick={onLogout}
               variant="outline"
               className="w-full h-12 rounded-xl border-2 border-destructive/40 text-destructive hover:bg-destructive/10"

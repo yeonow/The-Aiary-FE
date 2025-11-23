@@ -4,10 +4,9 @@ import { Input } from "./ui/input";
 import { Label } from "./ui/label";
 import { Card } from "./ui/card";
 import { User, Mail, Lock, Heart, Lightbulb, ArrowLeft } from "lucide-react";
-
+import { signup } from "../api/auth";
 
 export function SignupPage({ onSignup, onSignupWithTest, onBack }) {
-
   const [step, setStep] = useState(1);
   const [nickname, setNickname] = useState("");
   const [email, setEmail] = useState("");
@@ -26,17 +25,32 @@ export function SignupPage({ onSignup, onSignupWithTest, onBack }) {
     }
   };
 
-  const handleComplete = () => {
-    onSignup();
+  const handleComplete = async () => {
+    const hour = String(notificationHour).padStart(2, "0");
+    const minute = String(notificationMinute).padStart(2, "0");
+    const notificationTime = `${hour}:${minute}`;
+    const notificationAm = timeOfDay === "am";
+    try {
+      await signup({
+        email,
+        password,
+        nickname,
+        feedbackStyle,
+        notificationAm,
+        notificationTime,
+      });
+      alert("회원가입이 완료되었습니다!");
+      onSignup();
+    } catch (err) {
+      console.log(err.message);
+    }
   };
 
   return (
-    <div 
-      className="min-h-screen flex flex-col p-6 w-full"
-    >
+    <div className="min-h-screen flex flex-col p-6 w-full">
       <div className="flex items-center mb-6">
-        <Button 
-          variant="ghost" 
+        <Button
+          variant="ghost"
           size="icon"
           onClick={step === 1 ? onBack : () => setStep(1)}
           className="rounded-full hover:bg-primary/10"
@@ -49,8 +63,16 @@ export function SignupPage({ onSignup, onSignupWithTest, onBack }) {
 
       {/* Progress dots */}
       <div className="flex justify-center gap-2 mb-8">
-        <div className={`h-2 rounded-full transition-all ${step === 1 ? "bg-primary w-8" : "bg-muted w-2"}`}></div>
-        <div className={`h-2 rounded-full transition-all ${step === 2 ? "bg-primary w-8" : "bg-muted w-2"}`}></div>
+        <div
+          className={`h-2 rounded-full transition-all ${
+            step === 1 ? "bg-primary w-8" : "bg-muted w-2"
+          }`}
+        ></div>
+        <div
+          className={`h-2 rounded-full transition-all ${
+            step === 2 ? "bg-primary w-8" : "bg-muted w-2"
+          }`}
+        ></div>
       </div>
 
       {step === 1 && (
@@ -60,7 +82,10 @@ export function SignupPage({ onSignup, onSignupWithTest, onBack }) {
               <div className="space-y-2">
                 <Label htmlFor="nickname">닉네임</Label>
                 <div className="relative">
-                  <User className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-muted-foreground" strokeWidth={2} />
+                  <User
+                    className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-muted-foreground"
+                    strokeWidth={2}
+                  />
                   <Input
                     id="nickname"
                     placeholder="이름을 입력해주세요"
@@ -74,7 +99,10 @@ export function SignupPage({ onSignup, onSignupWithTest, onBack }) {
               <div className="space-y-2">
                 <Label htmlFor="email">이메일</Label>
                 <div className="relative">
-                  <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-muted-foreground" strokeWidth={2} />
+                  <Mail
+                    className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-muted-foreground"
+                    strokeWidth={2}
+                  />
                   <Input
                     id="email"
                     type="email"
@@ -89,7 +117,10 @@ export function SignupPage({ onSignup, onSignupWithTest, onBack }) {
               <div className="space-y-2">
                 <Label htmlFor="password">비밀번호</Label>
                 <div className="relative">
-                  <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-muted-foreground" strokeWidth={2} />
+                  <Lock
+                    className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-muted-foreground"
+                    strokeWidth={2}
+                  />
                   <Input
                     id="password"
                     type="password"
@@ -104,7 +135,10 @@ export function SignupPage({ onSignup, onSignupWithTest, onBack }) {
               <div className="space-y-2">
                 <Label htmlFor="confirmPassword">비밀번호 확인</Label>
                 <div className="relative">
-                  <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-muted-foreground" strokeWidth={2} />
+                  <Lock
+                    className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-muted-foreground"
+                    strokeWidth={2}
+                  />
                   <Input
                     id="confirmPassword"
                     type="password"
@@ -116,7 +150,7 @@ export function SignupPage({ onSignup, onSignupWithTest, onBack }) {
                 </div>
               </div>
 
-              <Button 
+              <Button
                 onClick={handleNext}
                 className="w-full h-12 rounded-xl bg-primary hover:bg-primary/90 shadow-soft mt-4"
               >
@@ -135,25 +169,31 @@ export function SignupPage({ onSignup, onSignupWithTest, onBack }) {
                 <Label className="mb-3 block">AI 피드백 스타일</Label>
                 <div className="grid grid-cols-2 gap-3">
                   <button
-                    onClick={() => setFeedbackStyle("comfort")}
+                    onClick={() => setFeedbackStyle("COMFORT")}
                     className={`p-5 rounded-xl border-2 transition-all ${
-                      feedbackStyle === "comfort"
+                      feedbackStyle === "COMFORT"
                         ? "border-primary bg-primary/10"
                         : "border-border bg-card"
                     }`}
                   >
-                    <Heart className="w-7 h-7 mx-auto mb-2 text-primary" strokeWidth={2} />
+                    <Heart
+                      className="w-7 h-7 mx-auto mb-2 text-primary"
+                      strokeWidth={2}
+                    />
                     <p className="text-sm font-medium">위로</p>
                   </button>
                   <button
-                    onClick={() => setFeedbackStyle("advice")}
+                    onClick={() => setFeedbackStyle("REALITY")}
                     className={`p-5 rounded-xl border-2 transition-all ${
-                      feedbackStyle === "advice"
+                      feedbackStyle === "REALITY"
                         ? "border-secondary bg-secondary/10"
                         : "border-border bg-card"
                     }`}
                   >
-                    <Lightbulb className="w-7 h-7 mx-auto mb-2 text-secondary-foreground" strokeWidth={2} />
+                    <Lightbulb
+                      className="w-7 h-7 mx-auto mb-2 text-secondary-foreground"
+                      strokeWidth={2}
+                    />
                     <p className="text-sm font-medium">조언</p>
                   </button>
                 </div>
@@ -161,7 +201,7 @@ export function SignupPage({ onSignup, onSignupWithTest, onBack }) {
 
               <div className="space-y-3">
                 <Label>일일 알림 시간</Label>
-                
+
                 {/* AM/PM Toggle */}
                 <div className="flex gap-2">
                   <button
@@ -215,14 +255,16 @@ export function SignupPage({ onSignup, onSignupWithTest, onBack }) {
           <Card className="p-5 rounded-2xl shadow-soft border bg-accent/10 mb-5">
             <div className="text-center">
               <p className="text-sm mb-5 leading-relaxed">
-                로그인 후 심리 테스트를 하면<br />더 맞춤형 AI 피드백을 받을 수 있어요
+                로그인 후 심리 테스트를 하면
+                <br />더 맞춤형 AI 피드백을 받을 수 있어요
               </p>
             </div>
           </Card>
           <Button
-             onClick = {handleComplete}
-               className="w-full h-12 rounded-xl bg-primary hover:bg-primary/90 shadow-soft mt-4">
-                설정완료
+            onClick={handleComplete}
+            className="w-full h-12 rounded-xl bg-primary hover:bg-primary/90 shadow-soft mt-4"
+          >
+            설정완료
           </Button>
         </div>
       )}
