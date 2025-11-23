@@ -10,7 +10,7 @@ import { X, Heart, BookOpen, Music, Lightbulb } from "lucide-react";
 import "../styles/globals.css";
 
 //interface DiaryDetailModalProps {
-//  open: boolean;
+//  open: boolean;git
 //  onClose: () => void;
 //  date: number;
 //}
@@ -29,15 +29,6 @@ export function DiaryDetailModal({ open, onClose, date }) {
         <div className="bg-card rounded-2xl shadow-soft-lg border overflow-hidden">
           {/* Header */}
           <div className="bg-primary/10 p-6 border-b relative">
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={onClose}
-              className="absolute top-4 right-4 rounded-full hover:bg-primary/10"
-            >
-              <X className="w-5 h-5" strokeWidth={2} />
-            </Button>
-
             <h3 className="text-primary">11월 {date}일 일기</h3>
             <p className="text-sm text-muted-foreground mt-0.5">오늘의 일기</p>
           </div>
@@ -121,14 +112,6 @@ export function DiaryDetailModal({ open, onClose, date }) {
           </div>
 
           {/* Close Button */}
-          <div className="px-6 pb-6">
-            <Button
-              onClick={onClose}
-              className="w-full h-12 rounded-xl bg-primary hover:bg-primary/90 shadow-soft"
-            >
-              닫기
-            </Button>
-          </div>
         </div>
       </DialogContent>
     </Dialog>

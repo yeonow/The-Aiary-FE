@@ -1,3 +1,7 @@
+<<<<<<< HEAD
+# The-Aiary-FE
+컴퓨터학부 해커톤 FE
+=======
 
   # Warm Diary App UI
 
@@ -9,3 +13,4 @@
 
   Run `npm run dev` to start the development server.
   
+>>>>>>> ui

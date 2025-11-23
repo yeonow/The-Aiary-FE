@@ -5,13 +5,9 @@ import { Label } from "./ui/label";
 import { Card } from "./ui/card";
 import { User, Mail, Lock, Heart, Lightbulb, ArrowLeft } from "lucide-react";
 
-//interface SignupPageProps {
-//  onSignup: () => void;
-//  onSignupWithTest: () => void;
-//  onBack: () => void;
-//}
 
 export function SignupPage({ onSignup, onSignupWithTest, onBack }) {
+
   const [step, setStep] = useState(1);
   const [nickname, setNickname] = useState("");
   const [email, setEmail] = useState("");
@@ -219,25 +215,15 @@ export function SignupPage({ onSignup, onSignupWithTest, onBack }) {
           <Card className="p-5 rounded-2xl shadow-soft border bg-accent/10 mb-5">
             <div className="text-center">
               <p className="text-sm mb-5 leading-relaxed">
-                감정 테스트를 하면<br />더 맞춤형 AI 피드백을 받을 수 있어요
+                로그인 후 심리 테스트를 하면<br />더 맞춤형 AI 피드백을 받을 수 있어요
               </p>
-              <div className="flex gap-2">
-                <Button 
-                  variant="outline"
-                  onClick={handleComplete}
-                  className="flex-1 rounded-xl h-11"
-                >
-                  나중에 하기
-                </Button>
-                <Button 
-                  onClick={onSignupWithTest}
-                  className="flex-1 rounded-xl bg-secondary hover:bg-secondary/90 text-secondary-foreground h-11"
-                >
-                  테스트하기
-                </Button>
-              </div>
             </div>
           </Card>
+          <Button
+             onClick = {handleComplete}
+               className="w-full h-12 rounded-xl bg-primary hover:bg-primary/90 shadow-soft mt-4">
+                설정완료
+          </Button>
         </div>
       )}
     </div>
